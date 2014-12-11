@@ -160,6 +160,9 @@ attribute :rackspace_snet, :equal_to => [true, false], :default => true
 # Creates a new block device.
 actions :create
 
+# Discovers manually attached block device.
+actions :discover
+
 # Creates a snapshot of a block device
 actions :snapshot
 
