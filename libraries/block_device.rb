@@ -55,8 +55,27 @@ module RightScale
         options)
     end
 
-    def discover_devices(lvm_device, mount_point)
+    def discover_devices(nickname, lvm_device, mount_point)
       platform = ::RightScale::Tools::Platform.factory
+      api = RightScale::Tools::API.factory('1.5')
+
+      instance = api.get_instance
+
+      # Obtains all devices in the lvm_devices ie /dev/xvdb, /dev/xvdc
+      devs = platform.get_devices_for_volume(lvm_device)
+
+      attached = api.volume_attachments.index(:filter => ["instance_href==#{instance.href}"]).reject do |attachment|
+        attachment.show.device.include? "unknown"
+      end
+
+      attached.each do |vol|
+        if devs.include? vol.show.device
+          resource_uid = vol.resource_uid.split(':').first
+          vol_name = api.volumes.index(:filter => ["resource_uid==#{resource_uid}"]).first.show.name
+          raise "Name of volume '#{vol_name}' must be changed to '#{nickname}'" if vol_name != nickname
+        end
+      end
+
       platform.enable_volume(lvm_device)
       platform.mount(lvm_device, mount_point, :options => 'noatime', :ignore_failure => true)
       platform.set_mount_point_for_device(lvm_device, mount_point)

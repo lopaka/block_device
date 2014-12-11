@@ -38,7 +38,7 @@ action :discover do
   clean_nickname = new_resource.nickname.downcase.gsub(/[^-._a-z0-9]/, '_')
   lvm_device = "/dev/vg-rightscale-#{clean_nickname}/lvol0"
 
-  discover_devices(lvm_device, new_resource.mount_point)
+  discover_devices(new_resource.nickname, lvm_device, new_resource.mount_point)
 end
 
 # Creates a snapshot of given device
