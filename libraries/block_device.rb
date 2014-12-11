@@ -56,8 +56,10 @@ module RightScale
     end
 
     def discover_devices(lvm_device, mount_point)
-      execute('pvscan')
-      execute("lvchange --available y #{lvm_device}")
+      platform = ::RightScale::Tools::Platform.factory
+      platform.enable_volume(lvm_device)
+      platform.mount(lvm_device, mount_point, :options => 'noatime', :ignore_failure => true)
+      platform.set_mount_point_for_device(lvm_device, mount_point)
     end
 
     # Performs checks to prevent empty values of attributes which are required
