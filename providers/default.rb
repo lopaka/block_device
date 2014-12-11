@@ -32,19 +32,11 @@ end
 
 # Discover attached block devices
 action :discover do
-  # Assumd devices are setup for LVM
-
+  # See cookbooks/block_device/libraries/block_device.rb for init method.
   device = init(new_resource)
-  create_options = {
-    :volume_size => new_resource.volume_size,
-    :stripe_count => new_resource.stripe_count,
-    :vg_data_percentage => new_resource.vg_data_percentage,
-    :force => new_resource.force
-  }
-  if new_resource.iops && !new_resource.iops.empty?
-    create_options[:iops] = new_resource.iops
-  end
-  create_options[:volume_type] = new_resource.volume_type
+
+  discover_devices(device, new_resource.mount_point)
+
 end
 
 # Creates a snapshot of given device

@@ -16,6 +16,9 @@ depends "rightscale"
 recipe "block_device::default",
   "Sets up input dependencies for use by other cookbooks."
 
+recipe "block_device::discover_block_device",
+  "Discover and use manually attached volumes."
+
 recipe "block_device::setup_block_device",
   "Creates, formats, and mounts a brand new block device on the instance."
 
