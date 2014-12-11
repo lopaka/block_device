@@ -55,9 +55,9 @@ module RightScale
         options)
     end
 
-    def discover_devices(device, mount_point)
+    def discover_devices(lvm_device, mount_point)
       execute('pvscan')
-      execute("lvchange --available y #{device}")
+      execute("lvchange --available y #{lvm_device}")
     end
 
     # Performs checks to prevent empty values of attributes which are required

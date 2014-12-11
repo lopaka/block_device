@@ -35,8 +35,10 @@ action :discover do
   # See cookbooks/block_device/libraries/block_device.rb for init method.
   device = init(new_resource)
 
-  discover_devices(device, new_resource.mount_point)
+  clean_nickname = new_resource.nickname.downcase.gsub(/[^-._a-z0-9]/, '_')
+  lvm_device = "/dev/vg-rightscale-#{clean_nickname}/lvol0"
 
+  discover_devices(lvm_device, new_resource.mount_point)
 end
 
 # Creates a snapshot of given device
